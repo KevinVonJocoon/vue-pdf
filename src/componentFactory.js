@@ -45,6 +45,10 @@ export default function(pdfjsWrapper) {
 				type: Number,
 				default: 0,
 			},
+			enableForms: {
+				type: Boolean,
+				default: false
+			}
 		},
 		watch: {
 			src: function() {
@@ -58,6 +62,13 @@ export default function(pdfjsWrapper) {
 			rotate: function() {
 				this.pdf.renderPage(this.rotate);
 			},
+			enableForms: function() {
+				console.log("enable forms changed")
+				this.pdf.options.renderInteractiveForms = this.enableForms
+				// re-render
+				console.log("re-render")
+				this.pdf.renderPage(this.rotate);
+			}
 		},
 		methods: {
 			resize: function(size) {
@@ -89,7 +100,8 @@ export default function(pdfjsWrapper) {
 		mounted: function() {
 
 			this.pdf = new PDFJSWrapper(this.$refs.canvasParent, this.$refs.annotationLayer, this.$emit.bind(this));
-			
+			this.pdf.options.renderInteractiveForms = this.enableForms
+
 			this.$on('loaded', function() {
 				
 				this.pdf.loadPage(this.page, this.rotate);

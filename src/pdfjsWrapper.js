@@ -50,7 +50,10 @@ export default function(PDFJS) {
 
 
 	function PDFJSWrapper(canvasParent, annotationLayerElt, emitEvent) {
-		
+
+		// options
+		this.options = {}
+
 		var pdfDoc = null;
 		var pdfPage = null;
 		var pdfRender = null;
@@ -59,6 +62,17 @@ export default function(PDFJS) {
 		canvasElt.style.display = 'block';
 		canvasElt.style.width = '100%';
 		canvasParent.appendChild(canvasElt);
+
+
+
+
+		this.getDocument = function() {
+			return pdfDoc;
+		}
+
+		this.getPage = function() {
+			return pdfPage
+		}
 
 		function clearCanvas() {
 			
@@ -256,15 +270,17 @@ export default function(PDFJS) {
 			pdfPage.getAnnotations()
 			.then(function(annotations) {
 
+
+				console.log("render using interactive forms: " + this.options.renderInteractiveForms)
 				PDFJS.AnnotationLayer.render({
 					viewport: viewport.clone({ dontFlip: true }),
 					div: annotationLayerElt,
 					annotations: annotations,
 					page: pdfPage,
 					linkService: linkService,
-					renderInteractiveForms: false
+					renderInteractiveForms: this.options.renderInteractiveForms ? this.options.renderInteractiveForms : false
 				});
-			});
+			}.bind(this));
 
 			pdfRender
 			.then(function() {
