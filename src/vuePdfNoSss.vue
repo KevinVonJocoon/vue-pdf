@@ -9,7 +9,8 @@
 	} else {
 
 		var pdfjsWrapper = require('./pdfjsWrapper.js').default;
-		var PDFJS = require('pdfjs-dist/webpack.js');
+		// use other webpack init script - allow worker-loader overrides
+		var PDFJS = require('pdfjs-dist/webpackNoExplicitLoader.js');
 		var component = componentFactory(pdfjsWrapper(PDFJS));
 	}
 
